@@ -256,11 +256,6 @@ func (m *Model) handleTypingKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		return m, nil
 	case "enter":
 		return m.handleLineComplete(), nil
-	case "backspace":
-		if len(m.userInput) > 0 {
-			m.userInput = m.userInput[:len(m.userInput)-1]
-			m.currentPos = len(m.userInput)
-		}
 	default:
 		if len(msg.String()) == 1 {
 			m.userInput += msg.String()
