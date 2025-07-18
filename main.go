@@ -13,7 +13,7 @@ import (
 func main() {
 	// Initialize the app
 	model := ui.NewModel()
-	
+
 	// Ensure cleanup on exit
 	defer model.Cleanup()
 
