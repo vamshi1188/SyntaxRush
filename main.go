@@ -13,6 +13,9 @@ import (
 func main() {
 	// Initialize the app
 	model := ui.NewModel()
+	
+	// Ensure cleanup on exit
+	defer model.Cleanup()
 
 	// Check if file was provided as argument
 	if len(os.Args) > 1 {

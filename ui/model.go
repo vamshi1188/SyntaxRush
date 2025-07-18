@@ -2,6 +2,7 @@ package ui
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -24,10 +25,12 @@ type Model struct {
 	correctChars   int
 	incorrectChars int
 	currentPos     int
+	lastMistakePos int // Track last mistake position to avoid repeated sounds
 
 	// Metrics
 	metrics *core.Metrics
 	timer   *core.Timer
+	audio   *core.AudioManager
 
 	// UI state
 	width         int
@@ -60,6 +63,19 @@ const (
 	StateFileSelect
 )
 
+// playErrorSound plays a beep sound when a mistake is made
+// Uses the oto audio library for high-quality cross-platform sound
+func (m *Model) playErrorSound() {
+	// Play audio if available
+	if m.audio != nil {
+		m.audio.PlayErrorBeep()
+	} else {
+		// Fallback to terminal bell if audio initialization failed
+		os.Stdout.Write([]byte("\a"))
+		os.Stdout.Sync()
+	}
+}
+
 // TickMsg is sent every second to update metrics
 type TickMsg time.Time
 
@@ -68,6 +84,13 @@ func NewModel() *Model {
 	parser := core.NewParser()
 	metrics := core.NewMetrics()
 	timer := core.NewTimer()
+	
+	// Initialize audio manager (gracefully handle errors)
+	audio, err := core.NewAudioManager()
+	if err != nil {
+		// If audio fails to initialize, continue without sound
+		audio = nil
+	}
 
 	// Load default sample code
 	sampleCode := `package main
@@ -96,13 +119,15 @@ func sum(nums []int) int {
 }`
 
 	model := &Model{
-		parser:       parser,
-		metrics:      metrics,
-		timer:        timer,
-		theme:        theme.NewDarkTheme(),
-		state:        StateWelcome,
-		maxViewLines: 20,
-		filename:     "sample.go",
+		parser:         parser,
+		metrics:        metrics,
+		timer:          timer,
+		audio:          audio, // Add audio manager
+		theme:          theme.NewDarkTheme(),
+		state:          StateWelcome,
+		maxViewLines:   20,
+		filename:       "sample.go",
+		lastMistakePos: -1, // Initialize mistake tracking
 	}
 
 	model.codeLines = strings.Split(sampleCode, "\n")
@@ -162,6 +187,7 @@ func (m *Model) resetSession() {
 	m.correctChars = 0
 	m.incorrectChars = 0
 	m.currentPos = 0
+	m.lastMistakePos = -1 // Reset mistake tracking
 	m.viewportStart = 0
 	m.sessionComplete = false
 	m.timer.Reset()
@@ -258,8 +284,28 @@ func (m *Model) handleTypingKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		return m.handleLineComplete(), nil
 	default:
 		if len(msg.String()) == 1 {
+			oldInputLen := len(m.userInput)
 			m.userInput += msg.String()
 			m.currentPos = len(m.userInput)
+
+			// Check if this character is a mistake
+			currentLine := m.getCurrentLine()
+			if oldInputLen < len(currentLine) {
+				expectedChar := rune(currentLine[oldInputLen])
+				typedChar := rune(msg.String()[0])
+
+				// If this is a new mistake (not repeating at same position)
+				if expectedChar != typedChar && m.lastMistakePos != oldInputLen {
+					m.playErrorSound()
+					m.lastMistakePos = oldInputLen
+				}
+			} else {
+				// Typing beyond the line length is also a mistake
+				if m.lastMistakePos != oldInputLen {
+					m.playErrorSound()
+					m.lastMistakePos = oldInputLen
+				}
+			}
 
 			// Start timer on first keypress
 			if !m.timer.IsRunning() {
@@ -279,10 +325,16 @@ func (m *Model) handleLineComplete() *Model {
 	// Calculate accuracy for this line
 	m.metrics.AddLine(m.userInput, currentCode)
 
+	// Play success sound if line was typed correctly
+	if m.userInput == currentCode && m.audio != nil {
+		m.audio.PlaySuccessSound()
+	}
+
 	// Move to next line
 	m.currentLine++
 	m.userInput = ""
 	m.currentPos = 0
+	m.lastMistakePos = -1 // Reset mistake tracking for new line
 
 	// Check if we've completed all lines
 	if m.currentLine >= m.totalLines {
@@ -415,6 +467,13 @@ func (m *Model) View() string {
 	}
 
 	return ""
+}
+
+// Cleanup properly closes audio resources
+func (m *Model) Cleanup() {
+	if m.audio != nil {
+		m.audio.Close()
+	}
 }
 
 // Helper methods for rendering will be implemented in view.go

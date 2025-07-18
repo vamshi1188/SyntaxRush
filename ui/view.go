@@ -16,6 +16,7 @@ func (m *Model) renderWelcome() string {
 		"🧠⚡ Improve your coding speed and accuracy.",
 		"",
 		"Practice typing real code. Master syntax.",
+		"🔊 Audio feedback for mistakes and success!",
 		"",
 		"📁 Current file: " + m.filename,
 		fmt.Sprintf("📄 Lines: %d", m.totalLines),
