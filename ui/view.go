@@ -10,21 +10,12 @@ import (
 
 // renderWelcome renders the welcome screen
 func (m *Model) renderWelcome() string {
-	// ASCII Art Logo
-	asciiArt := "  ____                  _                  ____           _     \n" +
-		" / ___|  ___ _ __  _ __(_)_ __   __ _     |  _ \\ ___  ___| |_  \n" +
-		" \\___ \\ / _ \\ '_ \\| '__| | '_ \\ / _` |____| |_) / _ \\/ __| __| \n" +
-		"  ___) |  __/ | | | |  | | | | | (_| |____|  _ <  __/\\__ \\ |_  \n" +
-		" |____/ \\___|_| |_|_|  |_|_| |_|\\__, |    |_| \\_\\___||___/\\__| \n" +
-		"                               |___/                           \n" +
-		"\n" +
-		"           Practice typing real code. Master syntax."
-
-	styledAscii := m.theme.Title.Render(asciiArt)
-
 	instructions := []string{
 		"",
-		"🧠⚡ Welcome to SyntaxRush! Improve your coding speed and accuracy.",
+		"🚀 SyntaxRush - Welcome! 🚀",
+		"🧠⚡ Improve your coding speed and accuracy.",
+		"",
+		"Practice typing real code. Master syntax.",
 		"",
 		"📁 Current file: " + m.filename,
 		fmt.Sprintf("📄 Lines: %d", m.totalLines),
@@ -42,10 +33,10 @@ func (m *Model) renderWelcome() string {
 
 	if m.message != "" {
 		message := m.theme.Error.Render(m.message)
-		return lipgloss.JoinVertical(lipgloss.Center, styledAscii, styledContent, "", message)
+		return lipgloss.JoinVertical(lipgloss.Center, styledContent, "", message)
 	}
 
-	return lipgloss.JoinVertical(lipgloss.Center, styledAscii, styledContent)
+	return styledContent
 }
 
 // renderTyping renders the main typing interface
