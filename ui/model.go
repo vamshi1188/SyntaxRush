@@ -34,6 +34,7 @@ type Model struct {
 	metrics *core.Metrics
 	timer   *core.Timer
 	audio   *core.AudioManager
+	mpi     *core.MusclePowerIndicator // Muscle Power Indicator
 
 	// UI state
 	width         int
@@ -87,6 +88,7 @@ func NewModel() *Model {
 	parser := core.NewParser()
 	metrics := core.NewMetrics()
 	timer := core.NewTimer()
+	mpi := core.NewMusclePowerIndicator()
 
 	// Initialize audio manager (gracefully handle errors)
 	audio, err := core.NewAudioManager()
@@ -126,11 +128,12 @@ func sum(nums []int) int {
 		metrics:        metrics,
 		timer:          timer,
 		audio:          audio, // Add audio manager
+		mpi:            mpi,   // Add muscle power indicator
 		theme:          theme.NewDarkTheme(),
 		state:          StateWelcome,
 		maxViewLines:   20,
 		filename:       "sample.go",
-		lastMistakePos: -1, // Initialize mistake tracking
+		lastMistakePos: -1,                   // Initialize mistake tracking
 		completedLines: make(map[int]string), // Initialize typing history
 	}
 
@@ -197,6 +200,7 @@ func (m *Model) resetSession() {
 	m.completedLines = make(map[int]string) // Reset typing history
 	m.timer.Reset()
 	m.metrics.Reset()
+	m.mpi.Reset() // Reset muscle power indicator
 	m.state = StateTyping
 }
 
@@ -287,6 +291,12 @@ func (m *Model) handleTypingKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 		return m, nil
 	case "enter":
 		return m.handleLineComplete(), nil
+	case "backspace":
+		// Backspace is disabled during typing practice, but track the attempt
+		m.mpi.RecordKeystroke(0, false, true)
+		// Play error sound to indicate backspace is not allowed
+		m.playErrorSound()
+		return m, nil
 	default:
 		if len(msg.String()) == 1 {
 			oldInputLen := len(m.userInput)
@@ -295,22 +305,29 @@ func (m *Model) handleTypingKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 
 			// Check if this character is a mistake
 			currentLine := m.getCurrentLine()
+			isCorrect := false
+
 			if oldInputLen < len(currentLine) {
 				expectedChar := rune(currentLine[oldInputLen])
 				typedChar := rune(msg.String()[0])
+				isCorrect = expectedChar == typedChar
 
 				// If this is a new mistake (not repeating at same position)
-				if expectedChar != typedChar && m.lastMistakePos != oldInputLen {
+				if !isCorrect && m.lastMistakePos != oldInputLen {
 					m.playErrorSound()
 					m.lastMistakePos = oldInputLen
 				}
 			} else {
 				// Typing beyond the line length is also a mistake
+				isCorrect = false
 				if m.lastMistakePos != oldInputLen {
 					m.playErrorSound()
 					m.lastMistakePos = oldInputLen
 				}
 			}
+
+			// Record keystroke in MPI
+			m.mpi.RecordKeystroke(rune(msg.String()[0]), isCorrect, false)
 
 			// Start timer on first keypress
 			if !m.timer.IsRunning() {

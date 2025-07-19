@@ -48,6 +48,9 @@ func (m *Model) renderTyping() string {
 	// Combined code display with typing
 	codePane := m.renderUnifiedCodePane()
 
+	// Muscle Power Indicator
+	mpiPanel := m.renderMusclePowerIndicator()
+
 	// Metrics panel
 	metricsPanel := m.renderMetrics()
 
@@ -59,6 +62,8 @@ func (m *Model) renderTyping() string {
 		header,
 		"",
 		codePane,
+		"",
+		mpiPanel,
 		"",
 		metricsPanel,
 		"",
@@ -283,7 +288,7 @@ func (m *Model) renderCompletedLineWithColors(lineNum, originalCode, userInput s
 			// Character exists in both user input and expected code
 			userChar := rune(userInput[i])
 			expectedChar := rune(trimmedCode[i])
-			
+
 			if userChar == expectedChar {
 				// Correct character - green
 				lineBuilder.WriteString(m.theme.CorrectChar.Render(string(expectedChar)))
@@ -302,6 +307,60 @@ func (m *Model) renderCompletedLineWithColors(lineNum, originalCode, userInput s
 
 	// Apply normal code line styling (no current line highlighting)
 	return m.theme.CodeLine.Render(lineBuilder.String())
+}
+
+// renderMusclePowerIndicator renders the muscle power indicator panel
+func (m *Model) renderMusclePowerIndicator() string {
+	powerLevel := m.mpi.GetCurrentPowerLevel()
+	stats := m.mpi.GetStats()
+
+	// Create power bar
+	powerBar := m.mpi.GetPowerBar(20)
+
+	// Build MPI display
+	mpiInfo := []string{
+		fmt.Sprintf("%s %s", powerLevel.Icon, powerLevel.Message),
+		fmt.Sprintf("💪 Power: [%s] %.0f%%", powerBar, powerLevel.Percentage),
+		fmt.Sprintf("🔥 Streak: %d", stats["correct_streak"]),
+		fmt.Sprintf("⚡ Peak: %.0f", stats["peak_power"]),
+	}
+
+	// Special achievement messages
+	if streak, ok := stats["correct_streak"].(int); ok && streak > 0 {
+		if streak >= 100 {
+			mpiInfo = append(mpiInfo, "🏆 FINGER FURY UNLEASHED!")
+		} else if streak >= 50 {
+			mpiInfo = append(mpiInfo, "🔥 ON FIRE!")
+		} else if streak >= 25 {
+			mpiInfo = append(mpiInfo, "⚡ GAINING MOMENTUM!")
+		}
+	}
+
+	// Fatigue warning
+	if fatigueDetected, ok := stats["fatigue_detected"].(bool); ok && fatigueDetected {
+		mpiInfo = append(mpiInfo, "💤 Consider a short break!")
+	}
+
+	content := strings.Join(mpiInfo, " │ ")
+
+	// Style based on power level
+	var styledContent string
+	switch powerLevel.Status {
+	case 0: // ZenMode
+		styledContent = m.theme.Text.Foreground(lipgloss.Color("13")).Render(content) // Purple
+	case 1: // FullPower
+		styledContent = m.theme.Text.Foreground(lipgloss.Color("10")).Render(content) // Green
+	case 2: // GoodFlow
+		styledContent = m.theme.Text.Foreground(lipgloss.Color("12")).Render(content) // Blue
+	case 3: // Fatigue
+		styledContent = m.theme.Text.Foreground(lipgloss.Color("11")).Render(content) // Yellow
+	case 4: // Burnout
+		styledContent = m.theme.Text.Foreground(lipgloss.Color("9")).Render(content) // Red
+	default:
+		styledContent = m.theme.Text.Render(content)
+	}
+
+	return m.theme.MetricsPanel.Width(m.width - 2).Render(styledContent)
 }
 
 // renderMetrics renders the real-time metrics panel
@@ -346,6 +405,10 @@ func (m *Model) renderControls() string {
 func (m *Model) renderSummary() string {
 	title := m.theme.Title.Render("🎉 SyntaxRush Session Complete!")
 
+	// Get MPI final stats
+	mpiStats := m.mpi.GetStats()
+	finalPowerLevel := m.mpi.GetCurrentPowerLevel()
+
 	stats := []string{
 		fmt.Sprintf("📁 File: %s", m.filename),
 		fmt.Sprintf("📄 Lines completed: %d", m.totalLines),
@@ -355,8 +418,37 @@ func (m *Model) renderSummary() string {
 		fmt.Sprintf("📊 Average CPM: %.1f", m.finalStats.CPM),
 		fmt.Sprintf("❌ Total mistakes: %d", m.finalStats.TotalMistakes),
 		"",
-		"🏆 Great job! Keep practicing to improve your speed and accuracy.",
+		"💪 MUSCLE POWER INDICATOR RESULTS:",
+		fmt.Sprintf("🏆 Final Power State: %s %s", finalPowerLevel.Icon, finalPowerLevel.Message),
+		fmt.Sprintf("⚡ Peak Power: %.1f CPM", mpiStats["peak_power"]),
+		fmt.Sprintf("🔥 Max Streak: %d characters", mpiStats["max_streak"]),
+		fmt.Sprintf("📈 Final Stamina: %.1f%%", mpiStats["stamina_level"].(float64)*100),
+		fmt.Sprintf("🎯 Consistency Score: %.1f%%", mpiStats["consistency_score"].(float64)*100),
+		fmt.Sprintf("⌨️  Total Keystrokes: %d", mpiStats["total_keystrokes"]),
+		fmt.Sprintf("⏱️  Avg Keystroke Delay: %dms", mpiStats["avg_keystroke_delay"]),
 	}
+
+	// Add special achievements
+	if maxStreak, ok := mpiStats["max_streak"].(int); ok && maxStreak > 0 {
+		if maxStreak >= 100 {
+			stats = append(stats, "🏆 ACHIEVEMENT: FINGER FURY UNLEASHED!")
+		} else if maxStreak >= 50 {
+			stats = append(stats, "🔥 ACHIEVEMENT: ON FIRE!")
+		} else if maxStreak >= 25 {
+			stats = append(stats, "⚡ ACHIEVEMENT: GAINING MOMENTUM!")
+		}
+	}
+
+	// Add fatigue analysis
+	if fatigueDetected, ok := mpiStats["fatigue_detected"].(bool); ok {
+		if fatigueDetected {
+			stats = append(stats, "💤 Fatigue was detected during session - consider breaks!")
+		} else {
+			stats = append(stats, "💪 Great endurance - no fatigue detected!")
+		}
+	}
+
+	stats = append(stats, "", "🏆 Great job! Keep practicing to improve your speed and accuracy.")
 
 	statsContent := strings.Join(stats, "\n")
 	styledStats := m.theme.Summary.Render(statsContent)
