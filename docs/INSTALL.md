@@ -11,11 +11,11 @@ cd SyntaxRush
 ./install.sh
 ```
 
-## Manual Installation Methods
+## Installation Methods
 
-### 1. Global Installation
+### 1. Global Installation (Local Source)
 
-Install SyntaxRush globally to use from anywhere on your system:
+Install SyntaxRush globally from your local source code:
 
 ```bash
 ./scripts/install-global.sh
@@ -47,6 +47,18 @@ Enable auto-completion for enhanced CLI experience:
 ```
 
 Supports bash, zsh, and fish shells.
+
+### 4. GitHub Installation (Coming Soon)
+
+Once the updated code is pushed to GitHub, users can install directly:
+
+```bash
+go install github.com/vamshi1188/SyntaxRush@latest
+```
+
+**Important**: Use the exact case-sensitive path:
+- ✅ Correct: `github.com/vamshi1188/SyntaxRush`
+- ❌ Incorrect: `github.com/vamshi1188/Syntaxrush`
 
 ## Requirements
 

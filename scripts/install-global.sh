@@ -117,6 +117,11 @@ else
 fi
 
 echo ""
-echo -e "${BLUE}🔧 To uninstall later, run:${NC}"
+echo -e "${BLUE}� Installation Notes:${NC}"
+echo "• This installs from your local source code"
+echo "• To install from GitHub: git clone + local install"
+echo "• After pushing updates: go install github.com/vamshi1188/SyntaxRush@latest"
+echo ""
+echo -e "${BLUE}�🔧 To uninstall later, run:${NC}"
 echo "sudo rm $INSTALL_DIR/$BINARY_NAME"
 echo "sudo rm -rf $ASSETS_DIR"
