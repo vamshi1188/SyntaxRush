@@ -8,7 +8,7 @@ import (
 
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/spf13/cobra"
-	"syntaxrush/ui"
+	"github.com/vamshi1188/SyntaxRush/ui"
 )
 
 // Flag variables

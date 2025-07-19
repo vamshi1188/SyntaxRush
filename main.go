@@ -1,7 +1,7 @@
 package main
 
 import (
-	"syntaxrush/cmd"
+	"github.com/vamshi1188/SyntaxRush/cmd"
 )
 
 func main() {

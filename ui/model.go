@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"syntaxrush/core"
-	"syntaxrush/theme"
+	"github.com/vamshi1188/SyntaxRush/core"
+	"github.com/vamshi1188/SyntaxRush/theme"
 
 	tea "github.com/charmbracelet/bubbletea"
 )
