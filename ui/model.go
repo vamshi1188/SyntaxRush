@@ -84,7 +84,7 @@ func NewModel() *Model {
 	parser := core.NewParser()
 	metrics := core.NewMetrics()
 	timer := core.NewTimer()
-	
+
 	// Initialize audio manager (gracefully handle errors)
 	audio, err := core.NewAudioManager()
 	if err != nil {
