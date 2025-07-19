@@ -1,260 +1,279 @@
-# SyntaxRush - Terminal-Based Code Typing Practice Tool
+# 🚀 SyntaxRush - Elite Code Typing Trainer
 
-🧠⚡ **SyntaxRush** is a rich, interactive terminal application built in Go that helps developers improve their coding speed and accuracy through focused typing practice with real code files.
+> **💪 The Ultimate Muscle-Powered Code Typing Experience**  
+> *Practice real code. Build typing stamina. Master syntax.*
 
-*Practice typing real code. Master syntax.*
+🧠⚡ **SyntaxRush** is an advanced, gamified terminal application that transforms code typing practice into an engaging fitness experience. Built for developers who want to type code like a pro!
 
-## Features
+## ✨ Key Features
 
-### 🎯 Core Functionality
-- **File Upload Support**: Load code files in multiple languages (.go, .py, .js, .cpp, .java, .rs, .ts)
-- **Smart File Loading**: Use shortcuts ('go', 'py', 'js', 'cpp') or full/relative paths
-- **Real-time Input**: Interactive file path input with live cursor and error feedback
-- **Real-time Feedback**: Instant visual feedback with color-coded correct/incorrect characters
-- **Live Metrics**: Real-time WPM, CPM, accuracy, and mistake tracking
-- **Syntax Highlighting**: Clean code display with current line highlighting
-- **Session Statistics**: Comprehensive performance analysis after completion
+### � **Muscle Power Indicator (MPI)** - *Revolutionary Typing Endurance System*
+- **💪 Real-time Power Tracking**: Dynamic muscle power calculation based on keystroke efficiency
+- **🏆 Achievement System**: Unlock "Finger Fury", "On Fire", and "Zen Mode" achievements  
+- **📈 Stamina Monitoring**: Track typing endurance and detect fatigue patterns
+- **⚡ Power States**: 6 dynamic states from "Ready to Type" to "Burnout" with visual feedback
+- **🔥 Streak Tracking**: Monitor consecutive correct characters with milestone celebrations
+- **🎯 Consistency Analysis**: Rhythm detection and keystroke timing optimization
 
-### 🎨 UI Features
-- **Beautiful ASCII Art**: Stunning welcome screen with SyntaxRush branding
-- **Enhanced Color Scheme**: Professional dark theme with neon green/red feedback
-- **Split-pane Interface**: Code display and typing input in separate panes
-- **Progress Tracking**: Visual progress indicator and line-by-line navigation
-- **Responsive Design**: Adapts to terminal size with smart scrolling
-- **Eye-friendly Theme**: Optimized colors for extended coding sessions
+### 🧠 **Smart Code Practice**
+- **📁 Multi-language Support**: Go, Python, JavaScript, C++, TypeScript, Rust, Java
+- **🚀 Quick File Loading**: Smart shortcuts (`go`, `py`, `js`, `cpp`) or custom file paths
+- **✨ Live Color Feedback**: Green/red character highlighting with persistent history
+- **📖 Unified Display**: Code context and typing practice in one seamless interface
+- **🎨 Leading Space Intelligence**: Skip indentation, focus on actual code content
 
-### ⌨️ Controls
-- **Ctrl+U**: Upload new file
-- **Ctrl+R**: Retry current session
-- **Enter**: Complete current line
-- **Esc**: Return to menu
-- **Q**: Quit application
+### 🔊 **Premium Audio Experience**
+- **🎵 High-Quality Audio**: Oto v2 library for crisp 44.1kHz sound
+- **❌ Error Feedback**: Instant audio cues for typing mistakes
+- **✅ Success Sounds**: Satisfying completion audio rewards
+- **🔇 Graceful Fallback**: Terminal bell backup if audio fails
 
-### 📊 Metrics Tracked
-- **WPM** (Words Per Minute)
-- **CPM** (Characters Per Minute)  
-- **Accuracy** percentage
-- **Mistake count** with position tracking
-- **Session time** with live timer
-- **Error heatmap** for performance analysis
+### 📊 **Comprehensive Analytics**
+- **⏱️ Real-time Metrics**: WPM, CPM, accuracy, time tracking
+- **🎯 Session Analysis**: Detailed performance breakdown
+- **💾 Typing History**: Color-coded progress preservation across lines
+- **📈 Power Statistics**: Peak performance, stamina levels, consistency scores
 
-## Installation
+## 🎮 Power States & Achievements
+
+| Status | Icon | Trigger Condition | Description |
+|--------|------|------------------|-------------|
+| 🧘 **Zen Mode** | 🧘 | 95%+ consistency + 80+ CPM + 50+ streak | Ultimate flow state |
+| 💪 **Full Power** | 💪 | 80%+ stamina + 60+ CPM | Peak performance |
+| ⚡ **Good Flow** | ⚡ | 60%+ stamina + steady rhythm | Solid pace |
+| 💤 **Fatigue Mode** | � | Declining performance | Focus needed |
+| 🔥 **Rest Needed** | 🔥 | Critical performance drop | Break time |
+| 🚀 **Ready to Type** | 🚀 | Initial state | Let's begin! |
+
+### 🏆 **Achievement Unlocks**
+- **🏆 FINGER FURY UNLEASHED!** - 100+ character perfect streak
+- **🔥 ON FIRE!** - 50+ character perfect streak  
+- **⚡ GAINING MOMENTUM!** - 25+ character perfect streak
+
+## 🚀 Quick Start
 
 ### Prerequisites
-- Go 1.21 or higher
-- Terminal with color support
-
-### Quick Start
-
-1. **Clone or download the project**:
-   ```bash
-   # If using git
-   git clone <repository-url>
-   cd typingapp
-   
-   # Or create the project from provided files
-   mkdir codetype && cd codetype
-   # Copy all provided files to this directory
-   ```
-
-2. **Install dependencies**:
-   ```bash
-   go mod tidy
-   ```
-
-3. **Run the application**:
-   ```bash
-   # Run directly
-   go run main.go
-   
-   # Or build and run
-   go build -o syntaxrush
-   ./syntaxrush
-   
-   # Or use the showcase launcher
-   ./launch.sh
-   ```
-
-4. **Run with a specific file**:
-   ```bash
-   go run main.go path/to/your/code/file.go
-   # or
-   ./syntaxrush path/to/your/code/file.py
-   ```
-
-## Usage
-
-### Getting Started
-
-1. **Launch the app**:
-   ```bash
-   go run main.go
-   ```
-
-2. **Welcome Screen**: 
-   - Press `Enter` or `Space` to start with the built-in sample
-   - Press `Ctrl+U` to upload your own code file
-   - Press `Q` or `Esc` to quit
-
-3. **Typing Practice**:
-   - Type each line exactly as shown in the code pane
-   - Watch real-time feedback with color coding:
-     - 🟢 **Green**: Correct characters
-     - 🔴 **Red**: Incorrect characters  
-     - ⚪ **Gray**: Characters yet to type
-     - 🟡 **Yellow**: Current cursor position
-   - Press `Enter` to move to the next line
-
-4. **Session Complete**:
-   - View comprehensive statistics
-   - Choose to retry, upload new file, or return to menu
-
-### Sample Files
-
-The application includes sample files in the `assets/` directory:
-
-- **`sample.go`**: Go calculator with structs, methods, and error handling
-- **`sample.py`**: Python data processor with classes, type hints, and statistics
-- **`sample.js`**: JavaScript task manager with modern ES6+ features
-
-### Supported File Types
-
-- **Go**: `.go`
-- **Python**: `.py`
-- **JavaScript**: `.js`, `.jsx`, `.ts`, `.tsx`
-- **C++**: `.cpp`, `.c`
-- **Java**: `.java`
-- **Rust**: `.rs`
-
-## Project Structure
-
-```
-syntaxrush/
-├── main.go              # Application entry point
-├── go.mod              # Go module definition  
-├── build.sh            # Build script
-├── launch.sh           # Demo launcher with showcase
-├── demo.sh             # File upload demo
-├── showcase.sh         # Color theme showcase
-├── ui/
-│   ├── model.go        # Bubbletea model & state management
-│   └── view.go         # UI rendering with ASCII art
-├── core/
-│   ├── parser.go       # File parsing & validation
-│   ├── metrics.go      # Statistics calculation
-│   └── timer.go        # Session timing
-├── theme/
-│   └── theme.go        # Enhanced color theming
-├── assets/
-│   ├── sample.go       # Sample Go code
-│   ├── sample.py       # Sample Python code
-│   ├── sample.js       # Sample JavaScript code
-│   └── sample.cpp      # Sample C++ code
-└── README.md           # This file
-```
-
-## Technical Details
-
-### Architecture
-- **Framework**: [Bubble Tea](https://github.com/charmbracelet/bubbletea) (Go TUI framework)
-- **Styling**: [Lip Gloss](https://github.com/charmbracelet/lipgloss) (Terminal styling)
-- **Terminal**: [tcell](https://github.com/gdamore/tcell) (Terminal handling)
-
-### Key Components
-
-1. **Parser**: Handles file reading, validation, and content processing
-2. **Metrics Engine**: Real-time calculation of typing statistics
-3. **Timer**: Precise session timing and elapsed time tracking
-4. **UI Model**: State management using the Model-View-Update pattern
-5. **Theme System**: Consistent styling across all UI components
-
-### Performance Features
-- **Efficient Rendering**: Only updates changed screen regions
-- **Smart Scrolling**: Keeps current line visible in large files
-- **Real-time Updates**: Sub-second metric calculation and display
-- **Memory Efficient**: Minimal memory footprint even with large files
-
-## Examples
-
-### Basic Session Flow
-
-```
-1. Launch: go run main.go
-2. ASCII art welcome screen appears
-3. Press Enter to start with sample.go
-4. Type each line character by character
-5. Watch metrics update in real-time
-6. Complete session and view statistics
-7. Choose next action (retry, new file, quit)
-```
-
-### Loading Custom File
+- **Go 1.21+** (Download from [golang.org](https://golang.org))
+- **Color-capable terminal** (most modern terminals)
+### Installation
 
 ```bash
-# Start with specific file
-go run main.go mycode.py
+# Clone the repository
+git clone https://github.com/vamshi1188/SyntaxRush.git
+cd SyntaxRush
 
-# Or upload during session
-# Press Ctrl+U and enter file path or shortcut:
-#   'go' → loads sample.go
-#   'py' → loads sample.py  
-#   'js' → loads sample.js
-#   'cpp' → loads sample.cpp
-#   './myfile.go' → loads relative path
-#   '/full/path/file.py' → loads absolute path
+# Install dependencies
+go mod tidy
+
+# Build the application
+go build -o syntaxrush
+
+# Run SyntaxRush
+./syntaxrush
 ```
 
-### Sample Output
+### Alternative: Direct Run
+```bash
+# Run without building
+go run main.go
 
-```
-  ____                  _                  ____           _     
- / ___|  ___ _ __  _ __(_)_ __   __ _     |  _ \ ___  ___| |_  
- \___ \ / _ \ '_ \| '__| | '_ \ / _` |____| |_) / _ \/ __| __| 
-  ___) |  __/ | | | |  | | | | | (_| |____|  _ <  __/\__ \ |_  
- |____/ \___|_| |_|_|  |_|_| |_|\__, |    |_| \_\___||___/\__| 
-                               |___/                           
-
-           Practice typing real code. Master syntax.
-
-📁 sample.go • Progress: 15/45 (33.3%)
-
-📖 Code to Type
-  13 │ func NewCalculator() *Calculator {
-  14 │     return &Calculator{memory: 0}
-  15 │ }                                    ← Current line
-  16 │ 
-  17 │ // Add performs addition
-
-⌨️  Your Input
-return &Calculator{memory: 0█
-
-⏱️ Time: 02:34 │ 🎯 Accuracy: 94.2% │ ⚡ WPM: 47 │ 📊 CPM: 235 │ ❌ Mistakes: 3
-
-Ctrl+R: Retry │ Ctrl+U: Upload │ Esc: Menu
+# Run with a specific file
+./syntaxrush path/to/your/code.go
 ```
 
-## Contributing
+## 🎯 How to Use
 
-This is a complete, functional typing practice tool. Potential enhancements:
+### 🚀 **Getting Started**
 
-- **Multiple themes** (light/dark mode toggle)
-- **Difficulty levels** (beginner, intermediate, advanced)
-- **Leaderboards** (local score storage)
-- **Custom snippets** (user-defined practice content)
-- **Language-specific practice** (focus on specific syntax patterns)
+1. **Launch SyntaxRush**:
+   ```bash
+   ./syntaxrush
+   ```
 
-## Dependencies
+2. **Choose your practice mode**:
+   - **Quick Start**: Press `Enter` or `Space` to begin with sample code
+   - **Custom File**: Press `Ctrl+U` to upload your own code file
 
-- **[Bubble Tea](https://github.com/charmbracelet/bubbletea)**: Modern TUI framework
-- **[Lip Gloss](https://github.com/charmbracelet/lipgloss)**: Terminal styling library
-- **[tcell](https://github.com/gdamore/tcell)**: Terminal cell manipulation
+3. **File Shortcuts** (when uploading):
+   - Type `go` for Go sample
+   - Type `py` for Python sample  
+   - Type `js` for JavaScript sample
+   - Type `cpp` for C++ sample
+   - Or enter any file path: `src/main.go`, `~/project/app.py`
 
-## License
+### 💪 **Practice Session**
 
-Open source - feel free to use, modify, and distribute.
+1. **Start Typing**: Begin typing the displayed code
+2. **Watch Your Power**: Monitor your Muscle Power Indicator in real-time
+3. **Build Streaks**: Aim for long correct character streaks
+4. **Maintain Flow**: Keep consistent rhythm for maximum power
+5. **Complete Lines**: Press `Enter` when you finish each line
+
+### 📊 **Understanding Your Results**
+
+#### **Real-time Display**
+```
+🚀 Ready to Type │ 💪 Power: [████████████████████] 100% │ 🔥 Streak: 0 │ ⚡ Peak: 1
+
+⏱️ Time: 00:00 │ 🎯 Accuracy: 100.0% │ ⚡ WPM: 0 │ 📊 CPM: 0 │ ❌ Mistakes: 0
+```
+
+#### **Final Session Summary**
+- **📁 Session Info**: File name, lines completed, total time
+- **🎯 Performance**: WPM, CPM, accuracy, mistakes
+- **💪 MPI Results**: Power states, peak performance, streaks
+- **🏆 Achievements**: Unlocked achievements and milestones
+- **💡 Health Insights**: Fatigue detection and endurance analysis
+
+## ⌨️ **Controls & Shortcuts**
+
+### **Main Controls**
+| Key | Action | Description |
+|-----|--------|-------------|
+| `Enter` / `Space` | Start Practice | Begin typing session with current file |
+| `Ctrl+U` | Upload File | Load a new code file for practice |
+| `Ctrl+R` | Retry Session | Restart current file from beginning |
+| `Esc` | Return to Menu | Go back to welcome screen |
+| `Q` | Quit | Exit SyntaxRush |
+
+### **File Loading Shortcuts**
+| Shortcut | File | Language |
+|----------|------|----------|
+| `go` | sample.go | Go programming |
+| `py` | sample.py | Python |
+| `js` | sample.js | JavaScript |
+| `cpp` | sample.cpp | C++ |
+
+### **During Practice**
+- **No Backspace**: Practice forward-only typing (realistic coding)
+- **Audio Feedback**: Hear mistake alerts and success sounds
+- **Live Color Coding**: See your progress in real-time
+- **Automatic Spacing**: Skip leading indentation, focus on code
+
+## 🎨 **Visual Experience**
+
+### **Color Coding System**
+- **🟢 Green Characters**: Correctly typed
+- **🔴 Red Characters**: Mistakes (shows expected character)
+- **⚪ Gray Characters**: Not yet typed or indentation
+- **🟡 Yellow Cursor**: Current typing position
+- **🟠 Orange**: Extra characters beyond line end
+
+### **Power Bar Display**
+```
+💪 Full Power │ 💪 Power: [████████████████████] 100% │ 🔥 Streak: 25 │ ⚡ Peak: 150
+```
+
+## 🏗️ **Technical Architecture**
+
+### **Built With**
+- **🔧 Go 1.21+**: Core application language
+- **🖥️ Bubble Tea**: Elegant TUI framework  
+- **🎨 Lip Gloss**: Beautiful terminal styling
+- **🔊 Oto v2**: High-quality cross-platform audio
+- **⚡ tcell v2**: Advanced terminal capabilities
+
+### **Project Structure**
+```
+SyntaxRush/
+├── main.go              # Application entry point
+├── ui/                  # User interface components
+│   ├── model.go         # Application state & logic
+│   └── view.go          # UI rendering & layout
+├── core/                # Core functionality
+│   ├── audio.go         # Audio management
+│   ├── metrics.go       # Performance tracking
+│   ├── muscle_power.go  # MPI system
+│   ├── parser.go        # File parsing
+│   └── timer.go         # Time management
+├── theme/               # Visual theming
+│   └── theme.go         # Color schemes & styles
+├── assets/              # Sample files
+│   ├── sample.go        # Go calculator
+│   ├── sample.py        # Python data processor  
+│   ├── sample.js        # JavaScript task manager
+│   └── sample.cpp       # C++ grade system
+└── README.md            # This file
+```
+
+## 📚 **Sample Files**
+
+## 🚧 **Supported Languages**
+
+SyntaxRush supports practice with these programming languages:
+
+| Language | Extensions | Sample File |
+|----------|------------|-------------|
+| **Go** | `.go` | Advanced calculator with structs & methods |
+| **Python** | `.py` | Data processor with classes & statistics |
+| **JavaScript** | `.js`, `.jsx`, `.ts`, `.tsx` | Task manager with ES6+ features |
+| **C++** | `.cpp`, `.c`, `.cc` | Grade system with OOP principles |
+| **Java** | `.java` | *Add your own files* |
+| **Rust** | `.rs` | *Add your own files* |
+
+## 🔧 **Development**
+
+### **Contributing**
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+### **Building from Source**
+```bash
+# Clone and build
+git clone https://github.com/vamshi1188/SyntaxRush.git
+cd SyntaxRush
+go mod tidy
+go build -o syntaxrush
+
+# Run tests
+go test ./...
+
+# Run with race detection
+go run -race main.go
+```
+
+## 🎯 **Why SyntaxRush?**
+
+### **🚀 For Developers**
+- **Real Code Practice**: No more lorem ipsum - practice with actual code
+- **Language Agnostic**: Works with any programming language
+- **Muscle Memory**: Build instinctive syntax knowledge
+- **Flow State Training**: Develop sustained coding rhythm
+
+### **🎮 For Gamers**
+- **Achievement System**: Unlock progressively harder challenges
+- **Power Progression**: Build typing endurance like a fitness tracker  
+- **Visual Feedback**: Satisfying real-time progress indicators
+- **Competitive Elements**: Beat your personal bests
+
+### **💪 For Health**
+- **Fatigue Detection**: Prevents typing strain and RSI
+- **Break Reminders**: Promotes healthy practice habits
+- **Stamina Building**: Gradual endurance improvement
+- **Rhythm Training**: Develops consistent, sustainable pace
+
+## 📜 **License**
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 **Acknowledgments**
+
+- **[Charm](https://charm.sh/)** - For the amazing Bubble Tea and Lip Gloss libraries
+- **[Hajimehoshi](https://github.com/hajimehoshi)** - For the Oto audio library
+- **Go Community** - For excellent tooling and ecosystem
+- **Contributors** - Thank you for making SyntaxRush better!
 
 ---
 
-**Happy Typing! 🧠⚡**
+<div align="center">
 
-*Practice typing real code. Master syntax with SyntaxRush.*
+**🚀 Ready to become a typing master?**
+
+[Download SyntaxRush](https://github.com/vamshi1188/SyntaxRush/releases) • [Report Bug](https://github.com/vamshi1188/SyntaxRush/issues) • [Request Feature](https://github.com/vamshi1188/SyntaxRush/issues)
+
+**Built with 💪 for developers who want to type like pros**
+
+</div>
