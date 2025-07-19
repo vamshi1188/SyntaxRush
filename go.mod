@@ -1,4 +1,4 @@
-module syntaxrush
+module github.com/vamshi1188/SyntaxRush
 
 go 1.21
 
