@@ -55,8 +55,21 @@
 ### Prerequisites
 - **Go 1.21+** (Download from [golang.org](https://golang.org))
 - **Color-capable terminal** (most modern terminals)
+
 ### Installation
 
+#### Option 1: Quick Install (Recommended)
+```bash
+# Clone and install globally
+git clone https://github.com/vamshi1188/SyntaxRush.git
+cd SyntaxRush
+./install.sh
+
+# Start practicing immediately
+syntaxrush practice go
+```
+
+#### Option 2: Manual Installation
 ```bash
 # Clone the repository
 git clone https://github.com/vamshi1188/SyntaxRush.git
@@ -69,37 +82,75 @@ go mod tidy
 go build -o syntaxrush
 
 # Run SyntaxRush
-./syntaxrush
+./syntaxrush practice
 ```
 
-### Alternative: Direct Run
+#### Option 3: Go Install (Coming Soon)
 ```bash
-# Run without building
-go run main.go
+# Install directly with Go
+go install github.com/vamshi1188/SyntaxRush@latest
 
-# Run with a specific file
-./syntaxrush path/to/your/code.go
+# Use anywhere
+syntaxrush practice main.go
+```
+
+### Shell Completion (Optional)
+```bash
+# Enable auto-completion for commands and files
+./setup-completion.sh
 ```
 
 ## 🎯 How to Use
 
 ### 🚀 **Getting Started**
 
-1. **Launch SyntaxRush**:
+1. **Install SyntaxRush globally**:
    ```bash
-   ./syntaxrush
+   ./install.sh
    ```
 
-2. **Choose your practice mode**:
-   - **Quick Start**: Press `Enter` or `Space` to begin with sample code
-   - **Custom File**: Press `Ctrl+U` to upload your own code file
+2. **Start practicing immediately**:
+   ```bash
+   # Practice with built-in samples
+   syntaxrush practice go       # Go calculator
+   syntaxrush practice python   # Python data processor
+   syntaxrush practice js       # JavaScript task manager
+   syntaxrush practice cpp      # C++ grade system
+   
+   # Practice with your own files
+   syntaxrush practice main.go
+   syntaxrush practice src/app.py
+   syntaxrush practice ~/projects/calculator.js
+   ```
 
-3. **File Shortcuts** (when uploading):
-   - Type `go` for Go sample
-   - Type `py` for Python sample  
-   - Type `js` for JavaScript sample
-   - Type `cpp` for C++ sample
-   - Or enter any file path: `src/main.go`, `~/project/app.py`
+3. **Use CLI flags for customization**:
+   ```bash
+   syntaxrush practice --quick main.go    # Skip welcome screen
+   syntaxrush practice --mute app.py      # Disable audio
+   syntaxrush practice --stats hello.go   # Show detailed stats
+   ```
+
+### 💪 **CLI Commands**
+
+| Command | Description | Example |
+|---------|-------------|---------|
+| `practice [file]` | Start typing practice | `syntaxrush practice main.go` |
+| `practice go` | Practice with Go sample | `syntaxrush practice go` |
+| `practice python` | Practice with Python sample | `syntaxrush practice python` |
+| `stats` | View performance statistics | `syntaxrush stats` |
+| `config` | Configure settings | `syntaxrush config` |
+| `version` | Show version info | `syntaxrush version` |
+| `--help` | Show help for any command | `syntaxrush practice --help` |
+
+### 🎛️ **CLI Flags**
+
+| Flag | Short | Description | Example |
+|------|-------|-------------|---------|
+| `--quick` | `-q` | Skip welcome screen | `syntaxrush practice -q main.go` |
+| `--mute` | `-m` | Disable audio feedback | `syntaxrush practice -m app.py` |
+| `--stats` | `-s` | Show detailed statistics | `syntaxrush practice -s hello.go` |
+| `--difficulty` | `-d` | Set difficulty level | `syntaxrush practice -d hard main.go` |
+| `--help` | `-h` | Show command help | `syntaxrush practice -h` |
 
 ### 💪 **Practice Session**
 

@@ -509,4 +509,32 @@ func (m *Model) Cleanup() {
 	}
 }
 
+// SetAudioEnabled enables or disables audio feedback
+func (m *Model) SetAudioEnabled(enabled bool) {
+	if !enabled && m.audio != nil {
+		m.audio.Close()
+		m.audio = nil
+	}
+}
+
+// StartPracticeDirectly skips welcome screen and starts practice immediately
+func (m *Model) StartPracticeDirectly() {
+	m.resetSession()
+	m.timer.Start()
+}
+
+// GetFinalStats returns the final session statistics
+func (m *Model) GetFinalStats() core.SessionStats {
+	if m.sessionComplete {
+		return m.finalStats
+	}
+	// Return current stats if session is ongoing
+	return m.metrics.GetSessionStats(m.timer.Elapsed())
+}
+
+// GetMPIStats returns muscle power indicator statistics
+func (m *Model) GetMPIStats() map[string]interface{} {
+	return m.mpi.GetStats()
+}
+
 // Helper methods for rendering will be implemented in view.go
