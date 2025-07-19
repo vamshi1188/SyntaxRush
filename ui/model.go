@@ -27,6 +27,9 @@ type Model struct {
 	currentPos     int
 	lastMistakePos int // Track last mistake position to avoid repeated sounds
 
+	// Typing history for completed lines
+	completedLines map[int]string // Maps line number to user's typed input
+
 	// Metrics
 	metrics *core.Metrics
 	timer   *core.Timer
@@ -128,6 +131,7 @@ func sum(nums []int) int {
 		maxViewLines:   20,
 		filename:       "sample.go",
 		lastMistakePos: -1, // Initialize mistake tracking
+		completedLines: make(map[int]string), // Initialize typing history
 	}
 
 	model.codeLines = strings.Split(sampleCode, "\n")
@@ -190,6 +194,7 @@ func (m *Model) resetSession() {
 	m.lastMistakePos = -1 // Reset mistake tracking
 	m.viewportStart = 0
 	m.sessionComplete = false
+	m.completedLines = make(map[int]string) // Reset typing history
 	m.timer.Reset()
 	m.metrics.Reset()
 	m.state = StateTyping
@@ -322,6 +327,9 @@ func (m *Model) handleTypingKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 func (m *Model) handleLineComplete() *Model {
 	currentCode := m.getCurrentLine()
 
+	// Store the user's input for this completed line
+	m.completedLines[m.currentLine] = m.userInput
+
 	// Calculate accuracy for this line
 	m.metrics.AddLine(m.userInput, currentCode)
 
@@ -410,8 +418,16 @@ func (m *Model) handleFileSelectKeys(msg tea.KeyMsg) (tea.Model, tea.Cmd) {
 	return m, nil
 }
 
-// getCurrentLine returns the current line to type
+// getCurrentLine returns the current line to type (trimmed of leading whitespace)
 func (m *Model) getCurrentLine() string {
+	if m.currentLine >= len(m.codeLines) {
+		return ""
+	}
+	return strings.TrimLeft(m.codeLines[m.currentLine], " \t")
+}
+
+// getCurrentLineRaw returns the current line with original whitespace (for display)
+func (m *Model) getCurrentLineRaw() string {
 	if m.currentLine >= len(m.codeLines) {
 		return ""
 	}

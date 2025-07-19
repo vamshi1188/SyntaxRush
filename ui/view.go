@@ -45,11 +45,8 @@ func (m *Model) renderTyping() string {
 	// Header with file info
 	header := m.renderHeader()
 
-	// Code display pane
-	codePane := m.renderCodePane()
-
-	// Typing input pane
-	inputPane := m.renderInputPane()
+	// Combined code display with typing
+	codePane := m.renderUnifiedCodePane()
 
 	// Metrics panel
 	metricsPanel := m.renderMetrics()
@@ -62,8 +59,6 @@ func (m *Model) renderTyping() string {
 		header,
 		"",
 		codePane,
-		"",
-		inputPane,
 		"",
 		metricsPanel,
 		"",
@@ -118,11 +113,20 @@ func (m *Model) renderCodePane() string {
 
 // renderInputPane renders the typing input area
 func (m *Model) renderInputPane() string {
-	currentCode := m.getCurrentLine()
+	currentCodeRaw := m.getCurrentLineRaw()                 // Original line with indentation
+	currentCode := m.getCurrentLine()                       // Trimmed line for typing
+	leadingSpaces := len(currentCodeRaw) - len(currentCode) // Calculate indentation
 
 	// Create styled input showing correct/incorrect characters
 	var styledInput strings.Builder
 
+	// First, add the leading spaces as already "typed" (in gray/dim style)
+	if leadingSpaces > 0 {
+		indentation := currentCodeRaw[:leadingSpaces]
+		styledInput.WriteString(m.theme.RemainingChar.Render(indentation))
+	}
+
+	// Then handle the actual typing part (trimmed content)
 	for i, char := range currentCode {
 		if i < len(m.userInput) {
 			userChar := rune(m.userInput[i])
@@ -159,6 +163,145 @@ func (m *Model) renderInputPane() string {
 	paneStyle := m.theme.InputPane.Width(m.width - 4).Height(3)
 
 	return lipgloss.JoinVertical(lipgloss.Left, title, paneStyle.Render(inputDisplay))
+}
+
+// renderUnifiedCodePane renders the code with integrated typing display
+func (m *Model) renderUnifiedCodePane() string {
+	var lines []string
+
+	// Calculate visible range
+	startLine := m.viewportStart
+	endLine := startLine + m.maxViewLines
+	if endLine > m.totalLines {
+		endLine = m.totalLines
+	}
+
+	for i := startLine; i < endLine; i++ {
+		lineNum := fmt.Sprintf("%3d", i+1)
+		code := m.codeLines[i]
+
+		if i == m.currentLine {
+			// This is the current line being typed - show typing progress
+			styledLine := m.renderCurrentLineWithTyping(lineNum, code)
+			lines = append(lines, styledLine)
+		} else if userInput, isCompleted := m.completedLines[i]; isCompleted {
+			// This line was completed - show it with color coding
+			styledLine := m.renderCompletedLineWithColors(lineNum, code, userInput)
+			lines = append(lines, styledLine)
+		} else {
+			// Regular line display (not yet reached)
+			styledLine := m.theme.CodeLine.Render(fmt.Sprintf("%s │ %s", lineNum, code))
+			lines = append(lines, styledLine)
+		}
+	}
+
+	content := strings.Join(lines, "\n")
+
+	title := m.theme.PaneTitle.Render("📖 Code Practice")
+	paneStyle := m.theme.CodePane.Width(m.width - 4).Height(m.maxViewLines + 2)
+
+	return lipgloss.JoinVertical(lipgloss.Left, title, paneStyle.Render(content))
+}
+
+// renderCurrentLineWithTyping renders the current line with typing progress
+func (m *Model) renderCurrentLineWithTyping(lineNum, codeLine string) string {
+	currentCodeRaw := codeLine                              // Original line with indentation
+	currentCode := m.getCurrentLine()                       // Trimmed line for typing
+	leadingSpaces := len(currentCodeRaw) - len(currentCode) // Calculate indentation
+
+	// Build the display line: line number + separator + styled content
+	var lineBuilder strings.Builder
+	lineBuilder.WriteString(lineNum)
+	lineBuilder.WriteString(" │ ")
+
+	// Add the leading spaces (show them as dim/gray)
+	if leadingSpaces > 0 {
+		indentation := currentCodeRaw[:leadingSpaces]
+		lineBuilder.WriteString(m.theme.RemainingChar.Render(indentation))
+	}
+
+	// Now handle the actual typing content
+	for i, char := range currentCode {
+		if i < len(m.userInput) {
+			userChar := rune(m.userInput[i])
+			if userChar == char {
+				// Correct character
+				lineBuilder.WriteString(m.theme.CorrectChar.Render(string(char)))
+			} else {
+				// Incorrect character - show the expected char in error style
+				lineBuilder.WriteString(m.theme.IncorrectChar.Render(string(char)))
+			}
+		} else if i == len(m.userInput) {
+			// Current cursor position
+			lineBuilder.WriteString(m.theme.Cursor.Render(string(char)))
+		} else {
+			// Remaining characters
+			lineBuilder.WriteString(m.theme.RemainingChar.Render(string(char)))
+		}
+	}
+
+	// Show extra characters if user typed too much
+	if len(m.userInput) > len(currentCode) {
+		extra := m.userInput[len(currentCode):]
+		lineBuilder.WriteString(m.theme.ExtraChar.Render(extra))
+	}
+
+	// Show cursor if at end of line
+	if len(m.userInput) == len(currentCode) {
+		lineBuilder.WriteString(m.theme.Cursor.Render("█"))
+	}
+
+	// Apply current line highlighting to the entire line
+	return m.theme.CurrentLine.Render(lineBuilder.String())
+}
+
+// renderCompletedLineWithColors renders a completed line with color feedback
+func (m *Model) renderCompletedLineWithColors(lineNum, originalCode, userInput string) string {
+	// We need to get the trimmed version of the original code for comparison
+	trimmedCode := strings.TrimLeft(originalCode, " \t")
+	leadingSpaces := len(originalCode) - len(trimmedCode)
+
+	// Build the display line: line number + separator + styled content
+	var lineBuilder strings.Builder
+	lineBuilder.WriteString(lineNum)
+	lineBuilder.WriteString(" │ ")
+
+	// Add the leading spaces (show them as dim/gray)
+	if leadingSpaces > 0 {
+		indentation := originalCode[:leadingSpaces]
+		lineBuilder.WriteString(m.theme.RemainingChar.Render(indentation))
+	}
+
+	// Compare user input with the trimmed code and style accordingly
+	maxLen := len(trimmedCode)
+	if len(userInput) > maxLen {
+		maxLen = len(userInput)
+	}
+
+	for i := 0; i < maxLen; i++ {
+		if i < len(userInput) && i < len(trimmedCode) {
+			// Character exists in both user input and expected code
+			userChar := rune(userInput[i])
+			expectedChar := rune(trimmedCode[i])
+			
+			if userChar == expectedChar {
+				// Correct character - green
+				lineBuilder.WriteString(m.theme.CorrectChar.Render(string(expectedChar)))
+			} else {
+				// Incorrect character - red (show the expected character)
+				lineBuilder.WriteString(m.theme.IncorrectChar.Render(string(expectedChar)))
+			}
+		} else if i < len(trimmedCode) {
+			// User didn't type this character - show it as missing/gray
+			lineBuilder.WriteString(m.theme.RemainingChar.Render(string(trimmedCode[i])))
+		} else {
+			// User typed extra characters - show them as extra/error
+			lineBuilder.WriteString(m.theme.ExtraChar.Render(string(userInput[i])))
+		}
+	}
+
+	// Apply normal code line styling (no current line highlighting)
+	return m.theme.CodeLine.Render(lineBuilder.String())
 }
 
 // renderMetrics renders the real-time metrics panel
