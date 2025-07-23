@@ -28,8 +28,8 @@ You can provide a file path or use shortcuts:
   
 Examples:
   syntaxrush practice                    # Use default sample
-  syntaxrush practice main.go            # Practice with main.go (from current directory)
-  syntaxrush practice /path/to/file.go   # Practice with absolute path
+  syntaxrush practice filename            # Practice with main.go (from current directory)
+  syntaxrush practice /path/to/filename   # Practice with absolute path
   syntaxrush practice go                 # Use Go sample
   syntaxrush practice python --quick     # Quick Python practice`,
 	Args: cobra.MaximumNArgs(1),

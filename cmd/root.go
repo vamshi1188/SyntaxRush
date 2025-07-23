@@ -25,7 +25,7 @@ Features:
 • 📁 Multi-language Support (Go, Python, JS, C++, Rust, Java)
 
 Examples:
-  syntaxrush practice main.go     # Practice with your code file
+  syntaxrush practice filename     # Practice with your code file
   syntaxrush practice go          # Practice with Go sample
   syntaxrush practice python      # Practice with Python sample
   syntaxrush stats                # View your performance stats
